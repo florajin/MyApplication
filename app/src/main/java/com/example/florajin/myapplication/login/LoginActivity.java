@@ -2,33 +2,32 @@ package com.example.florajin.myapplication.login;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-
-import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import javax.inject.Inject;
 
 import com.example.florajin.myapplication.R;
 import com.example.florajin.myapplication.summary.SummaryActivity;
 
-import butterknife.BindString;
-import butterknife.ButterKnife;
-
-import javax.inject.Inject;
-
 import butterknife.BindView;
-
-import static android.support.v4.content.ContextCompat.startActivity;
+import butterknife.ButterKnife;
 
 /**
  * A login screen that offers login via username/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoginContract.LoginView {
+
+    @Inject
+    LoginContract.LoginView  loginView;
+    @Inject
+    LoginPresenterImpl loginPresenter;
 
     @BindView(R.id.username)
     EditText mUsernameView;
@@ -38,16 +37,15 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Lo
     Button mUserSignInButton;
 
     private String focusViewName = "";
-    private LoginPresenterImpl loginPresenter;
+    //private LoginPresenterImpl loginPresenter;
     public static final String prefKey="prefKey";
-    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        loginPresenter = new LoginPresenterImpl(this);
+        //loginPresenter = new LoginPresenterImpl(this);
 
         // Set up the login form.
         mUsernameView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -126,9 +124,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Lo
 
     private void setSharedPreference(){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-        editor = preferences.edit();
+        SharedPreferences.Editor editor = preferences.edit();
         editor.putString(prefKey, String.valueOf(mUsernameView.getText()));
-        editor.commit();
+        editor.apply();
     }
 
 }
